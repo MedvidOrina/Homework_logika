@@ -1,0 +1,129 @@
+import pygame
+pygame.init()
+
+wikno = pygame.display.set_mode((500, 500))
+wikno.fill((202, 148, 255))
+clock = pygame.time.Clock()
+
+class Area():
+    def __init__(self, x, y, width, height, color = None):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.fill_color = (202, 148, 255)
+        if  color:
+            self.fill_color = color
+
+    def color(self, new_color):
+        self.fill_color = new_color
+
+    def draw(self):
+        pygame.draw.rect(wikno, self.fill_color, self.rect)
+
+    def outline(self, line_color, line_width):
+        pygame.draw.rect(wikno, line_color, self.rect, line_width)
+
+    def collidepoint(self, x_x, y_y):
+        return self.rect.collidepoint(x_x, y_y)
+    def colliderect(self, rect):
+        return self.rect.colliderect(rect)
+
+class Picture(Area):
+    def __init__(self, filename, x, y, width, height):
+        Area.__init__(self, x=x, y=y, width=width, height=height, color = None)
+        self.image = pygame.image.load(filename)
+
+    def fill(self):
+        wikno.blit(self.image, (self.rect.x, self.rect.y))
+
+class Label(Area):
+    def set_text(self, text, size = 18, text_color=(224, 2, 2)):
+        self.image = pygame.font.SysFont("liana", size, "bold").render(text, True, text_color)
+    
+    def fill(self, shift_x, shift_y):
+        self.draw()
+        wikno.blit(self.image, (self.rect.x + shift_x, self.rect.y + shift_y))
+
+platform_x = 300
+platform_y = 310
+
+platform = Picture("платформа.png", platform_x, platform_y, 100, 30)
+ball = Picture("мяч (1).png", 200, 200, 50, 50)
+
+number = 8
+x_ork = 2
+y_ork = 6
+enemys = []
+for i in range (3):
+    x = x_ork + (27.5*i)
+    y = y_ork + (60*i)
+    for a in range(number):
+        enemy = Picture("серце (1).png", x, y, 60, 60)
+        enemys.append(enemy)
+        x += 63
+    number -= 1
+        
+move_right = False
+move_left = False
+
+dx = 3
+dy = 3
+
+game = True
+while game:
+    wikno.fill((202, 148, 255))
+    ball.draw()
+    platform.draw()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                move_right = True
+            if event.key == pygame.K_LEFT:
+                move_left = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_RIGHT:
+                move_right = False
+            if event.key == pygame.K_LEFT:
+                move_left = False
+    if move_right:
+        platform.rect.x += 3
+
+    if move_left:
+        platform.rect.x -= 3
+    
+    ball.rect.x += dx
+    ball.rect.y += dy
+    
+    if ball.rect.y < 0:
+        dy *= -1
+    if ball.rect.x > 470 or ball.rect.x < 0:
+        dx *= -1
+    if ball.rect.y > 360:
+        lose = Label(80, 200, 50, 50, (202, 148, 255))
+        lose.set_text("You LOSE👎 !!!", 80,(99, 8, 168))
+        lose.fill(10, 10)
+        game = False
+    
+    if len(enemys) == 0:
+        lose = Label(90, 180, 50, 50, (202, 148, 255))
+        lose.set_text("You WIN👑 !!!", 80,(99, 8, 168))
+        lose.fill(10, 10)
+        game = False
+    
+    if ball.rect.colliderect(platform.rect):
+        dy *= -1
+            
+    for e in enemys:
+        e.fill()
+        if e.rect.colliderect(ball.rect):
+            enemys.remove(e)
+            e.draw()
+            dy *= -1
+    
+
+    platform.fill()
+    ball.fill()
+
+
+    pygame.display.update()
+    clock.tick(60)
