@@ -1,0 +1,38 @@
+#підключення бібліотек
+
+from PyQt5.QtCore import Qt #підключення бібліотек
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout #
+from random import randint #
+
+#створення елементів інтерфейсу
+
+app = QApplication([])#створення додатку
+win = QWidget() #створення вікна 
+win.setWindowTitle("Winner_generator") #зміна назви додатка
+win.resize(600, 400) #зміна розміру
+win.move(550, 250) #переміщення вікна
+
+text1 = QLabel("Натисни, щоб дізнатись winnera") #кнопочка
+text2 =QLabel("?") #кнопочка
+gener = QPushButton ("Згенерувати") #кнопочка
+
+#прив'язка елементів до вертикальної лінії
+
+line = QVBoxLayout()#вертикальна лінія
+line.addWidget(text1, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line.addWidget(text2, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line.addWidget(gener, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+
+win.setLayout(line)#прив'язуємо весь текст до лінії
+
+def funk ():#створюємо функцію
+    num =  randint(1, 100)#підключаємо рандом 1-100
+    text1.setText("Winner:")#текст переможець
+    text2.setText(str(num))#переводимо у строку , заміняємо ? на цифру
+
+gener.clicked.connect(funk)#запускаємо функцію
+
+#запуск додатку
+
+win.show()#показ вікна
+app.exec_()#функція що не дає закрити вікно просто так
