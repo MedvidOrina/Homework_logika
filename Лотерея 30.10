@@ -1,0 +1,46 @@
+#підключення бібліотек
+
+from PyQt5.QtCore import Qt #підключення бібліотек
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout #підключення бібліотек
+from random import randint #підключення бібліотек
+
+#створення елементів інтерфейсу
+
+app = QApplication([])#створення додатку
+win = QWidget() #створення вікна 
+win.setWindowTitle("Лотерея") #зміна назви додатка
+win.resize(600, 400) #зміна розміру
+win.move(550, 250) #переміщення вікна
+
+text1 = QLabel("Натисни, щоб взяти участь") #кнопочка
+text2 =QLabel("?") #кнопочка
+text3 =QLabel("?") #кнопочка
+gener = QPushButton ("Випробувати удачу") #кнопочка
+
+#прив'язка елементів до вертикальної лінії
+
+line = QVBoxLayout()#вертикальна лінія
+line.addWidget(text1, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line.addWidget(text2, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line.addWidget(text3, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line.addWidget(gener, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+
+win.setLayout(line)#прив'язуємо весь текст до лінії
+
+def funk ():#створюємо функцію
+    num =  randint(1, 9)#підключаємо рандом 1-9
+    num2 = randint(1, 9)#підключаємо рандом 1-9
+    text2.setText(str(num))#переводимо у строку , заміняємо ? на цифру
+    text3.setText(str(num2))#переводимо у строку , заміняємо ? на цифру
+    if num == num2: #якщо 1 рандомне число = другому тобто вони рівні
+        text1.setText("Ви виграли! Зіграйте знову")#текст переможець
+    else: #інакше
+        text1.setText("Ви програли! Зіграйте знову") #числа не рівні
+    
+
+gener.clicked.connect(funk)#запускаємо функцію
+
+#запуск додатку
+
+win.show()#показ вікна
+app.exec_()#функція що не дає закрити вікно просто так
