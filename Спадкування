@@ -1,0 +1,33 @@
+class Widget:
+    def __init__(self, text, x, y):
+        self.text = text
+        self.x = x
+        self.y = y
+
+    def display_info(self):
+        print(f"Текст: {self.text}")
+        print(f"Координати (x, y): ({self.x}, {self.y}")
+
+
+class Button(Widget):
+    def __init__(self, text, x, y):
+        super().__init__(text, x, y)
+        self.is_clicked = False
+
+    def click(self):
+        self.is_clicked = True
+        print("Ви зареєстровані")
+
+# Створення екземпляра класу Button
+button = Button("Реєстрація", 100, 50)
+
+# Питання користувачу
+answer = input("Хочете зареєструватися? (так / ні): ")
+
+if answer.lower() == "так":
+    button.click()
+else:
+    print("А шкода!")
+
+# Виведення інформації про кнопку
+button.display_info()
