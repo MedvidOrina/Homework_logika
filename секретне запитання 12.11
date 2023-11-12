@@ -1,0 +1,62 @@
+#запрограмуй складний тест
+#підключення бібліотек
+from PyQt5.QtCore import Qt 
+from PyQt5.QtWidgets import QApplication, QWidget, QRadioButton, QLabel, QVBoxLayout, QHBoxLayout, QMessageBox
+#створення додатка і головного вікна
+app = QApplication([])#створення додатку
+win = QWidget() #створення вікна 
+win.setWindowTitle("Секретне запитання") #зміна назви додатка
+win.resize(600, 400) #зміна розміру
+win.move(550, 250) #переміщення вікна
+#створення віджетів головного вікна
+text = QLabel("Хто найкращий вчитель в ліцеї ?") #кнопочка
+gener = QRadioButton ("Дацків В.Л.") #кнопочка  
+gener1 = QRadioButton ("Ільницька С.Й.") #кнопочка
+gener2 = QRadioButton ("Шершень В.І.") #кнопочка
+gener3 = QRadioButton ("Сподар О.С.") #кнопочка
+gener4 = QRadioButton ("Анна Ярославіна") #кнопочка
+gener5 = QRadioButton ("Лошак Я.Я.") #кнопочка
+
+#прив'язка елементів до вертикальної лінії
+
+line1 = QHBoxLayout()#горизонтальна лінія
+line2 = QHBoxLayout()#горизонтальна лінія
+line = QVBoxLayout()#вертикальна лінія
+line_q = QHBoxLayout()#горизонтальна лінія
+
+line_q.addWidget(text, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line1.addWidget(gener, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line1.addWidget(gener1, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line1.addWidget(gener4, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line2.addWidget(gener2, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line2.addWidget(gener3, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+line2.addWidget(gener5, alignment = Qt.AlignCenter)#додаємо текст до лінії, відцентровуємо
+
+line.addLayout(line_q)
+line.addLayout(line1)
+line.addLayout(line2)
+
+win.setLayout(line)
+#розташування віджетів по лейаутам
+
+#обробка натискань на перемикачі
+def show_win():
+    massage = QMessageBox()
+    massage.setText("Правильно ! Я теж так вважаю !")
+    massage.exec_()
+
+def show_lose():
+    massage1 = QMessageBox()
+    massage1.setText("Неправильно ! Моя думка інакша !")
+    massage1.exec_()
+
+
+gener4.clicked.connect(show_win)
+gener.clicked.connect(show_lose)
+gener1.clicked.connect(show_lose)
+gener3.clicked.connect(show_lose)
+gener2.clicked.connect(show_lose)
+gener5.clicked.connect(show_lose)
+#відображення вікна додатка 
+win.show()#показ вікна
+app.exec_()#функція що не дає закрити вікно просто так
