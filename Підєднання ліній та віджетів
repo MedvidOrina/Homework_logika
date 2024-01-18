@@ -1,0 +1,51 @@
+#почни тут створювати додаток з розумними замітками
+from PyQt5.QtCore import Qt #підключення бібліотек
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QListWidget, QLineEdit, QTextEdit, QVBoxLayout, QHBoxLayout,QPushButton, QInputDialog
+
+app = QApplication([])
+win = QWidget()
+win.setWindowTitle("Розумні нотатки")
+
+text_note = QTextEdit()
+notes_label = QLabel("Список заміток:")
+list_note = QListWidget()
+
+create_note = QPushButton("Створити нотатку")
+del_note = QPushButton("Видалити нотатку")
+save_note = QPushButton("Зберегти нотатку")
+
+tag_label = QLabel("Список тегів:")
+list_tag = QListWidget()
+pole_tag = QLineEdit()
+pole_tag.setPlaceholderText("Введіть тег...")
+
+add_tag = QPushButton("Додати до нотатки")
+del_tag = QPushButton("Відкріпити від нотатки")
+search_tag = QPushButton("Шукати нотатку по тегу")
+
+line1 = QHBoxLayout()
+line2 = QVBoxLayout()
+line3 = QVBoxLayout()
+
+line2.addWidget(text_note)
+line3.addWidget(notes_label)
+line3.addWidget(list_note)
+line3.addWidget(create_note)
+line3.addWidget(del_note)
+line3.addWidget(save_note)
+line3.addWidget(tag_label)
+line3.addWidget(list_tag)
+line3.addWidget(pole_tag)
+line3.addWidget(add_tag)
+line3.addWidget(del_tag)
+line3.addWidget(search_tag)
+
+
+line1.addLayout(line2)
+line1.addLayout(line3)
+
+win.setLayout(line1)
+win.resize(900, 605)
+
+win.show()
+app.exec_()
