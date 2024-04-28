@@ -1,0 +1,227 @@
+#створи гру "Лабіринт"!
+from pygame import *
+
+window = display.set_mode((700, 500))
+display.set_caption("Лабіринт")
+
+background = transform.scale(image.load("vesel.jpg"), (700, 500))
+background_w = transform.scale(image.load("ray.jpg"), (700, 500))
+background_l = transform.scale(image.load("add.jpg"), (700, 500))
+
+clock = time.Clock()
+start = True
+
+mixer.init()
+mixer.music.load("love.mp3")
+mixer.music.play()
+
+money = mixer.Sound("money.ogg")
+kick = mixer.Sound("kick.ogg")
+
+class GameSprite(sprite.Sprite): 
+    def __init__(self, name, x, y, width, height, speed): 
+        self.image = transform.scale(image.load(name), (width, height)) 
+        self.speed = speed 
+        self.rect = self.image.get_rect() 
+        self.rect.x = x 
+        self.rect.y = y 
+     
+    def reset(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+class Player(GameSprite): 
+    def move(self): 
+        keys = key.get_pressed() 
+        if keys[K_UP] and self.rect.y > 5: 
+            self.rect.y -= self.speed 
+ 
+        if keys[K_DOWN] and self.rect.y < 435: 
+            self.rect.y += self.speed 
+ 
+        if keys[K_RIGHT] and self.rect.x < 635: 
+            self.rect.x += self.speed 
+ 
+        if keys[K_LEFT] and self.rect.x > 5: 
+            self.rect.x -= self.speed
+
+class Enemy(GameSprite): 
+    ok = 'left' 
+    def move(self): 
+        if self.rect.x < 10: 
+            self.ok = 'right' 
+        if self.rect.x > 180: 
+            self.ok = 'left' 
+ 
+        if self.ok == 'left': 
+            self.rect.x -= self.speed 
+        else: 
+            self.rect.x += self.speed
+
+class Enemy1(GameSprite): 
+    ok = 'left' 
+    def move(self): 
+        if self.rect.x < 350: 
+            self.ok = 'right' 
+        if self.rect.x > 580: 
+            self.ok = 'left' 
+ 
+        if self.ok == 'left': 
+            self.rect.x -= self.speed 
+        else: 
+            self.rect.x += self.speed
+
+class Stina(sprite.Sprite):
+    def __init__(self, width, height, x, y, color): 
+        super().__init__()
+        self.color = color
+        self.width = width
+        self.height = height
+        self.image = Surface((self.width, self.height))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x 
+        self.rect.y = y 
+    def reset(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y))
+     
+
+player = Player('edun.png', 25, 400, 60, 60, 10) 
+enemy = Enemy('xmarka.png', 100, 200, 80, 80, 4) 
+enemy1 = Enemy1('xmarka.png', 400, 200, 80, 80, 4) 
+gold = GameSprite('zoloto.png', 520, 390, 120, 120, 0)
+
+stina1 = Stina(10, 550, 10, 10, (255, 0, 111))
+stina2 = Stina(250, 10, 10, 10, (255, 0, 111))
+stina3 = Stina(10, 400, 250, 10, (255, 0, 111))
+stina10 = Stina(10, 450, 100, 100, (255, 0, 111))
+stina11 = Stina(50, 10, 100, 100, (255, 0, 111))
+stina12 = Stina(10, 450, 150, 100, (255, 0, 111))
+stina6 = Stina(100, 10, 250, 400, (255, 0, 111))
+stina4 = Stina(10, 400, 350, 10, (255, 0, 111))
+stina5 = Stina(10, 500, 450, 100, (255, 0, 111))
+stina7 = Stina(300, 10, 350, 10, (255, 0, 111))
+stina8 = Stina(50, 10, 450, 100, (255, 0, 111))
+stina9 = Stina(10, 550, 500, 100, (255, 0, 111))
+stina13 = Stina(10, 550, 650, 10, (255, 0, 111))
+
+
+font.init()
+font1 = font.SysFont("Pasifico", 100)
+win = font1.render("YOU WIN!!!!", True, (0, 255, 0))
+lose = font1.render("YOU LOSE!!!", True, (255, 0, 0))
+
+finish = False
+
+while start == True:
+    for e in event.get():#перебирання всіх подій
+        if e.type == QUIT:#закривати хрестик
+            start = False#закрити програму
+    if finish == False:
+
+        window.blit(background, (0, 0))
+
+        player.reset() 
+        enemy.reset() 
+        enemy1.reset()
+        gold.reset() 
+        stina1.reset()
+        stina13.reset()
+        stina2.reset()
+        stina3.reset()
+        stina10.reset()
+        stina11.reset()
+        stina12.reset()
+        stina6.reset()
+        stina4.reset()
+        stina5.reset()
+        stina7.reset()
+        stina8.reset()
+        stina9.reset()
+    
+        player.move() 
+        enemy.move()
+        enemy1.move()
+
+        if sprite.collide_rect(player, gold):
+            finish = True
+            window.blit(background_w, (0,0))
+            window.blit(win, (150, 250))
+            money.play()
+
+        if sprite.collide_rect(player, enemy):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, enemy1):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina1):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina2):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina3):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina4):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+        if sprite.collide_rect(player, stina5):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina6):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina7):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+        if sprite.collide_rect(player, stina8):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina9):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina10):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina11):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina12):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+        if sprite.collide_rect(player, stina13):
+            finish = True
+            window.blit(background_l, (0,0))
+            window.blit(lose, (150, 250))
+            kick.play()
+
+
+    display.update()
+    clock.tick(60)
