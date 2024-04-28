@@ -1,0 +1,161 @@
+#почни тут створювати додаток з розумними замітками
+import json
+from PyQt5.QtCore import Qt #підключення бібліотек
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QListWidget, QLineEdit, QTextEdit, QVBoxLayout, QHBoxLayout,QPushButton, QInputDialog
+
+'''
+data = {
+"Школа":{
+    "текст":"Школа - це храм науки, який ніхто не любить, хай самі гризуть граніт науки.",
+    "теги":["наука","знання"]
+    }
+}
+
+with open("list.json", "w", encoding = "utf-8") as file:
+    json.dump(data, file)
+'''
+data = {}
+
+app = QApplication([])
+win = QWidget()
+win.setWindowTitle("Розумні нотатки")
+
+text_note = QTextEdit()
+notes_label = QLabel("Список заміток:")
+list_note = QListWidget()
+
+create_note = QPushButton("Створити нотатку")
+del_note = QPushButton("Видалити нотатку")
+save_note = QPushButton("Зберегти нотатку")
+
+tag_label = QLabel("Список тегів:")
+list_tag = QListWidget()
+pole_tag = QLineEdit()
+pole_tag.setPlaceholderText("Введіть тег...")
+
+add_tag = QPushButton("Додати до нотатки")
+del_tag = QPushButton("Відкріпити від нотатки")
+search_tag = QPushButton("Шукати нотатку по тегу")
+
+line1 = QHBoxLayout()
+line2 = QVBoxLayout()
+line3 = QVBoxLayout()
+
+line2.addWidget(text_note)
+line3.addWidget(notes_label)
+line3.addWidget(list_note)
+line3.addWidget(create_note)
+line3.addWidget(del_note)
+line3.addWidget(save_note)
+line3.addWidget(tag_label)
+line3.addWidget(list_tag)
+line3.addWidget(pole_tag)
+line3.addWidget(add_tag)
+line3.addWidget(del_tag)
+line3.addWidget(search_tag)
+
+
+line1.addLayout(line2)
+line1.addLayout(line3)
+
+win.setLayout(line1)
+win.resize(900, 605)
+
+def add_note():
+    ok, ko = QInputDialog.getText(win, "mini win", "Введи назву нотатки")
+    if ok and ko != "":
+        data[ok] = {"текст":"","теги":[]}
+        list_note.addItem(ok)
+create_note.clicked.connect(add_note)
+
+def save_notes():
+    if list_note.selectedItems():
+        key = list_note.selectedItems()[0].text()
+        data[key]["текст"] = text_note.toPlainText()
+        with open("list.json", "w", encoding="utf-8") as file:
+         json.dump(data, file)
+    else:
+        print("Ви не обрали нотатку для збережекння")   
+save_note.clicked.connect(save_notes)
+
+def notes_del():
+    if list_note.selectedItems():
+        key = list_note.selectedItems()[0].text()
+        del data[key]
+        list_note.clear()   
+        list_tag.clear()
+        text_note.clear()
+        list_note.addItems(data)
+        with open("list.json", "w", encoding="utf-8") as file:
+         json.dump(data, file)
+    else:
+        print("Ви не обрали нотатку для видалення")     
+
+del_note.clicked.connect(notes_del)
+
+def tag_add():
+    if list_note.selectedItems():
+        key = list_note.selectedItems()[0].text()
+        tag = pole_tag.text()
+        if not tag in data[key]["теги"]:
+            data[key]["теги"].append(tag)
+            list_tag.addItem(tag)
+            pole_tag.clear()
+        with open("list.json", "w", encoding="utf-8") as file:
+            json.dump(data, file)
+    else:
+        print("Ви не обрали нотатку для додавання тегу") 
+
+add_tag.clicked.connect(tag_add)
+
+def tag_del():
+    if list_tag.selectedItems():
+        key = list_note.selectedItems()[0].text()
+        tag = list_tag.selectedItems()[0].text()
+        data[key]["теги"].remove(tag)
+        list_tag.clear()
+        list_tag.addItems(data[key]["теги"])
+        with open("list.json", "w", encoding="utf-8") as file:
+         json.dump(data, file)
+    else:
+        print("Ви не обрали тег для видалення")
+
+del_tag.clicked.connect(tag_del)
+
+def tag_search():
+    tag = pole_tag.text()
+    if search_tag.text() == "Шукати нотатку по тегу" and tag:
+        stt = {}
+        for da in data:
+            if tag in data[da]["теги"]:
+                stt[da] = data[da]
+        search_tag.setText("Скинути пошук")
+        list_note.clear()
+        list_tag.clear()
+        list_note.addItems(stt)
+    elif search_tag.text() == "Скинути пошук":
+        pole_tag.clear()
+        list_tag.clear()
+        list_note.clear()
+        list_note.addItems(data)
+        search_tag.setText("Шукати нотатку по тегу")
+    else:
+        pass
+
+search_tag.clicked.connect(tag_search)
+
+def show_note():
+    key = list_note.selectedItems()[0].text()
+    text_note.setText(data[key]["текст"])
+    list_tag.clear()
+    list_tag.addItems(data[key]["теги"])
+
+list_note.itemClicked.connect(show_note)
+
+with open("list.json", "r", encoding="utf-8") as file:
+    data = json.load(file)
+list_note.addItems(data)
+
+
+win.show()
+app.exec_()
