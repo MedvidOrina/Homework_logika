@@ -1,0 +1,79 @@
+from PyQt5.QtCore import Qt #підключення бібліотек
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QRadioButton,QHBoxLayout,QPushButton, QSpinBox, QGroupBox, QButtonGroup
+
+win_1 = QWidget()
+
+btn_menu = QPushButton("Mеню")
+btn_relax = QPushButton("Відпочити")
+
+sp_time = QSpinBox()
+sp_time.setValue(10)
+text_time = QLabel("секунд")
+text_q = QLabel("Наше питання")
+
+rbtn1 = QRadioButton("1")
+rbtn2 = QRadioButton("2")
+rbtn3 = QRadioButton("3")
+rbtn4 = QRadioButton("4")
+
+radio_group = QButtonGroup()
+radio_group.addButton(rbtn1)
+radio_group.addButton(rbtn2)
+radio_group.addButton(rbtn3)
+radio_group.addButton(rbtn4)
+
+true_false = QLabel("Правильно")
+true_answer = QLabel("Правильний варіант відповіді")
+btn_next = QPushButton("Відповісти")
+
+line1 = QHBoxLayout()
+line2 = QVBoxLayout()
+line3 = QVBoxLayout()
+
+line2.addWidget(rbtn1)
+line2.addWidget(rbtn2)
+line3.addWidget(rbtn4)
+line3.addWidget(rbtn3)
+
+line1.addLayout(line2)
+line1.addLayout(line3)
+
+ramochka1 = QGroupBox("Варіанти відповідей")
+ramochka1.setLayout(line1)
+
+ramochka2 = QGroupBox("Результат")
+
+vline = QVBoxLayout()
+vline.addWidget(true_false, alignment = (Qt.AlignTop | Qt.AlignLeft))
+vline.addWidget(true_answer, alignment = Qt.AlignCenter)
+ramochka2.setLayout(vline)
+
+hline1 = QHBoxLayout()
+hline2 = QHBoxLayout()
+hline3 = QHBoxLayout()
+hline4 = QHBoxLayout()
+line = QVBoxLayout()
+
+hline1.addWidget(btn_menu)
+hline1.addStretch(1)
+hline1.addWidget(btn_relax)
+hline1.addWidget(sp_time)
+hline1.addWidget(text_time)
+
+hline2.addWidget(text_q, alignment = Qt.AlignCenter)
+
+hline3.addWidget(ramochka1)
+hline3.addWidget(ramochka2)
+ramochka2.hide()
+
+hline4.addStretch(1)
+hline4.addWidget(btn_next, stretch=2)
+hline4.addStretch(1)
+
+line.addLayout(hline1, stretch=1)
+line.addLayout(hline2, stretch=2)
+line.addLayout(hline3, stretch=7)
+line.addLayout(hline4, stretch=2)
+
+win_1.setLayout(line)
+win_1.resize(550, 525)
