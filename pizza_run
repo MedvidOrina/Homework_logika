@@ -1,0 +1,303 @@
+import pygame
+import sys
+
+# Визначення кольору RGB для синього
+BLUE = (0, 0, 255)
+
+# Ініціалізація вікна відображення
+window = pygame.display.set_mode((1000, 670))
+pygame.display.set_caption("Pizza Run")
+
+# Завантаження фонових зображень та їх масштабування до розміру вікна
+background = pygame.transform.scale(pygame.image.load("bg.jpeg"), (1000, 670))
+background_w = pygame.transform.scale(pygame.image.load("1.png"), (1000, 670))
+background_l = pygame.transform.scale(pygame.image.load("2.png"), (1000, 670))
+
+# Налаштування ігрового годинника
+clock = pygame.time.Clock()
+start = True
+
+# Визначення класу GameSprite
+class GameSprite(pygame.sprite.Sprite):
+    def __init__(self, name, x, y, width, height, speed):
+        super().__init__()
+        self.image = pygame.transform.scale(pygame.image.load(name), (width, height))
+        self.speed = speed
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+# Визначення класу Player
+class Player(GameSprite):
+    def move(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] and self.rect.y > 3:
+            self.rect.y -= self.speed
+        if keys[pygame.K_DOWN] and self.rect.y < 650:
+            self.rect.y += self.speed
+        if keys[pygame.K_RIGHT] and self.rect.x < 980:
+            self.rect.x += self.speed
+        if keys[pygame.K_LEFT] and self.rect.x > 3:
+            self.rect.x -= self.speed
+
+# Визначення класу Enemy
+class Enemy(GameSprite):
+    ok = 'left'
+    def move(self):
+        if self.rect.x < 10:
+            self.ok = 'right'
+        if self.rect.x > 180:
+            self.ok = 'left'
+        if self.ok == 'left':
+            self.rect.x -= self.speed
+        else:
+            self.rect.x += self.speed
+
+# Визначення класу Enemy1
+class Enemy1(GameSprite):
+    ok = 'left'
+    def move(self):
+        if self.rect.x < 350:
+            self.ok = 'right'
+        if self.rect.x > 580:
+            self.ok = 'left'
+        if self.ok == 'left':
+            self.rect.x -= self.speed
+        else:
+            self.rect.x += self.speed
+
+# Визначення класу Enemy2
+class Enemy2(GameSprite):
+    ok = 'left'
+    def move(self):
+        if self.rect.x < 600:
+            self.ok = 'right'
+        if self.rect.x > 800:
+            self.ok = 'left'
+        if self.ok == 'left':
+            self.rect.x -= self.speed
+        else:
+            self.rect.x += self.speed
+
+# Визначення класу Enemy3
+class Enemy3(GameSprite):
+    ok = 'left'
+    def move(self):
+        if self.rect.x < 350:
+            self.ok = 'right'
+        if self.rect.x > 580:
+            self.ok = 'left'
+        if self.ok == 'left':
+            self.rect.x -= self.speed
+        else:
+            self.rect.x += self.speed
+
+# Визначення класу Stina (Стіна)
+class Stina(pygame.sprite.Sprite):
+    def __init__(self, width, height, x, y, color):
+        super().__init__()
+        self.color = color
+        self.width = width
+        self.height = height
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+# Функція для малювання кнопки
+def draw_button(text, x, y, width, height, color, hover_color, action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    
+    if x + width > mouse[0] > x and y + height > mouse[1] > y:
+        pygame.draw.rect(window, hover_color, (x, y, width, height))
+        if click[0] == 1 and action is not None:
+            action()
+    else:
+        pygame.draw.rect(window, color, (x, y, width, height))
+    
+    font = pygame.font.SysFont(None, 35)
+    text_surface = font.render(text, True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
+    window.blit(text_surface, text_rect)
+
+# Функція для перезапуску гри
+def restart_game():
+    global finish, player, enemy, enemy1, enemy2, enemy3, piza
+    finish = False
+    player = Player('player.png', 40, 610, 40, 40, 10)
+    enemy = Enemy('sprite.png', 100, 200, 50, 50, 4)
+    enemy1 = Enemy1('sprite2.png', 400, 500, 50, 50, 4)
+    enemy2 = Enemy2('sprite4.png', 100, 200, 50, 50, 4)
+    enemy3 = Enemy3('sprite5.png', 400, 100, 50, 50, 4)
+    piza = GameSprite("piza.png", 900, 600, 50, 50, 0)
+
+# Ініціалізація гравця та ворогів
+player = Player('player.png', 40, 610, 40, 40, 10)
+enemy = Enemy('sprite.png', 100, 200, 50, 50, 4)
+enemy1 = Enemy1('sprite2.png', 400, 500, 50, 50, 4)
+enemy2 = Enemy2('sprite4.png', 100, 200, 50, 50, 4)
+enemy3 = Enemy3('sprite5.png', 400, 100, 50, 50, 4)
+piza = GameSprite("piza.png", 900, 600, 50, 50, 0)
+
+# Ініціалізація об'єктів зірок
+zirka1 = GameSprite("zirka.png", 180, 600, 50, 50, 0)
+zirka2 = GameSprite("zirka.png", 540, 600, 50, 50, 0)
+zirka3 = GameSprite("zirka.png", 770, 400, 50, 50, 0)
+
+# Ініціалізація об'єктів стін
+stina1 = Stina(10, 850, 10, 10, (255, 0, 111))
+stina2 = Stina(250, 10, 10, 10, (255, 0, 111))
+stina3 = Stina(10, 400, 250, 10, (255, 0, 111))
+stina14 = Stina(10, 400, 250, 500, (255, 0, 111))
+stina15 = Stina(100, 10, 250, 500, (255, 0, 111))
+stina16 = Stina(10, 350, 350, 500, (255, 0, 111))
+stina10 = Stina(10, 800, 100, 100, (255, 0, 111))
+stina11 = Stina(50, 10, 100, 100, (255, 0, 111))
+stina12 = Stina(10, 800, 150, 100, (255, 0, 111))
+stina6 = Stina(100, 10, 250, 400, (255, 0, 111))
+stina4 = Stina(10, 400, 350, 10, (255, 0, 111))
+stina5 = Stina(10, 800, 450, 100, (255, 0, 111))
+stina7 = Stina(640, 10, 350, 10, (255, 0, 111))
+stina8 = Stina(50, 10, 450, 100, (255, 0, 111))
+stina9 = Stina(10, 850, 500, 100, (255, 0, 111))
+stina13 = Stina(10, 880, 980, 10, (255, 0, 111))
+
+
+stina17 = Stina(10, 350, 600, 10, (255, 0, 111))
+stina18 = Stina(250, 10, 650, 10, (255, 0, 111))
+stina19 = Stina(10, 800, 850, 150, (255, 0, 111))
+stina20 = Stina(10, 800, 700, 150, (255, 0, 111))
+stina21 = Stina(30, 10, 700, 150, (255, 0, 111))
+stina22 = Stina(10, 600, 600, 450, (255, 0, 111))
+stina23 = Stina(120, 10, 730, 450, (255, 0, 111))
+stina24 = Stina(10, 300, 730, 150, (255, 0, 111))
+
+# Ініціалізація шрифту
+pygame.font.init()
+font1 = pygame.font.SysFont("Pasifico", 100)
+win = font1.render(".", True, (0, 255, 0))
+lose = font1.render(".", True, (255, 0, 0))
+
+# Флаг статусу гри
+finish = False
+
+# Основний ігровий цикл
+while start:
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            start = False
+    
+    if not finish:
+        window.blit(background, (0, 0))
+
+        # Скидання та малювання всіх ігрових об'єктів
+        player.reset()
+        enemy.reset()
+        enemy1.reset()
+        enemy2.reset()
+        enemy3.reset()
+        piza.reset()
+        zirka1.reset()
+        zirka2.reset()
+        zirka3.reset()
+
+        stina1.reset()
+        stina17.reset()
+        stina18.reset()
+        stina19.reset()
+        stina14.reset()
+        stina15.reset()
+        stina16.reset()
+        stina20.reset()
+        stina21.reset()
+        stina22.reset()
+        stina23.reset()
+        stina24.reset()
+        stina13.reset()
+        stina2.reset()
+        stina3.reset()
+        stina10.reset()
+        stina11.reset()
+        stina12.reset()
+        stina6.reset()
+        stina4.reset()
+        stina5.reset()
+        stina7.reset()
+        stina8.reset()
+        stina9.reset()
+    
+        # Оновлення позицій гравця та ворогів
+        player.move()
+        enemy.move()
+        enemy1.move()
+        enemy2.move()
+        enemy3.move()
+
+        # Перевірка на зіткнення
+        if pygame.sprite.collide_rect(player, enemy) or \
+           pygame.sprite.collide_rect(player, enemy1) or \
+           pygame.sprite.collide_rect(player, enemy2) or \
+           pygame.sprite.collide_rect(player, enemy3) or \
+           pygame.sprite.collide_rect(player, stina1) or \
+           pygame.sprite.collide_rect(player, stina2) or \
+           pygame.sprite.collide_rect(player, stina3) or \
+           pygame.sprite.collide_rect(player, stina4) or \
+           pygame.sprite.collide_rect(player, stina5) or \
+           pygame.sprite.collide_rect(player, stina6) or \
+           pygame.sprite.collide_rect(player, stina7) or \
+           pygame.sprite.collide_rect(player, stina8) or \
+           pygame.sprite.collide_rect(player, stina9) or \
+           pygame.sprite.collide_rect(player, stina10) or \
+           pygame.sprite.collide_rect(player, stina11) or \
+           pygame.sprite.collide_rect(player, stina12) or \
+           pygame.sprite.collide_rect(player, stina13) or \
+           pygame.sprite.collide_rect(player, stina14) or \
+           pygame.sprite.collide_rect(player, stina15) or \
+           pygame.sprite.collide_rect(player, stina16) or \
+           pygame.sprite.collide_rect(player, stina17) or \
+           pygame.sprite.collide_rect(player, stina18) or \
+           pygame.sprite.collide_rect(player, stina19) or \
+           pygame.sprite.collide_rect(player, stina20) or \
+           pygame.sprite.collide_rect(player, stina21) or \
+           pygame.sprite.collide_rect(player, stina22) or \
+           pygame.sprite.collide_rect(player, stina23) or \
+           pygame.sprite.collide_rect(player, stina24):
+            finish = True
+            window.blit(background_l, (0, 0))
+            window.blit(lose, (150, 250))
+            draw_button("Play again", 10, 10, 200, 50, (255, 192, 203), (255, 105, 180), restart_game)  # Рожева кнопка
+
+        # Перевірка на зіткнення з зірками
+        if pygame.sprite.collide_rect(player, zirka1):
+            finish = False
+            piza = GameSprite("piza.png", 900, 600, 60, 60, 0)
+
+        if pygame.sprite.collide_rect(player, zirka2):
+            finish = False
+            piza = GameSprite("piza.png", 900, 600, 70, 70, 0)
+
+        if pygame.sprite.collide_rect(player, zirka3):
+            finish = False
+            piza = GameSprite("piza.png", 900, 600, 80, 80, 0)
+
+        # Перевірка на зіткнення з піцою (умова перемоги)
+        if pygame.sprite.collide_rect(player, piza):
+            finish = True
+            window.blit(background_w, (0, 0))
+            window.blit(win, (150, 250))
+            draw_button("Play again", 10, 10, 200, 50, (255, 192, 203), (255, 105, 180), restart_game)  # Рожева кнопка
+
+    else:
+        draw_button("Play again", 10, 10, 200, 50, (255, 192, 203), (255, 105, 180), restart_game)  # Рожева кнопка
+
+    # Оновлення дисплея
+    pygame.display.update()
+    clock.tick(60)
