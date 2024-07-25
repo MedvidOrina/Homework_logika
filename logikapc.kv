@@ -1,0 +1,133 @@
+ScreenManager:
+    Autoriz:
+        name: 'autoriz'
+    Main:
+        name: 'main'
+
+<Autoriz>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        BorderImage:
+            source: 'fon.jpeg'
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 0.5, 0.5
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Image:
+            source: 'logika.png'
+
+        Label:
+            font_name: 'Arsenal-Bold.ttf'
+            text: "Logika Вхід"
+            font_size: '40sp'
+            color: 25, 160, 5, 1
+
+        Label:
+            font_name: 'Arsenal-Bold.ttf'
+            text: "--Логін--"
+            font_size: '20sp'
+            color: 25, 160, 5, 1
+
+        TextInput:
+            multiline: False
+            foreground_color: 128/255, 0/255, 128/255, 1
+
+        Label:
+            font_name: 'Arsenal-Bold.ttf'
+            text: "--Пароль--"
+            font_size: '20sp'
+            color: 25, 160, 5, 1
+
+        TextInput:
+            multiline: False
+            foreground_color: 128/255, 0/255, 128/255, 1
+
+        Button:
+            font_name: 'Arsenal-Bold.ttf'
+            text: "--Увійти--"
+            font_size: '20sp'
+            background_color: 81, 21, 0, 1
+            color: 25, 160, 5, 1
+            on_press:
+                self.background_color = 260, 10, 5, 1
+                app.root.current = 'main'
+
+<Main>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        BorderImage:
+            source: 'fon.jpeg'
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 0.5, 0.5
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Image:
+            size_hint: 0.8, 0.8
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            source: 'logika.png'
+
+        Label:
+            font_name: 'Arsenal-Bold.ttf'
+            text: "--Твій акаунт--"
+            font_size: '40sp'
+            color: 25, 160, 5, 1
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.8}
+            spacing: '100dp'
+            Label:
+                font_name: 'Arsenal-Bold.ttf'
+                text: "--Медвідь Орина--"
+                font_size: '30sp'
+                color: 25, 160, 5, 1
+            Image:
+                size_hint: None, None
+                size: '94dp', '64dp'
+                source: 'mi.jpeg'
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.8}
+            spacing: '100dp'
+            Label:
+                font_name: 'Arsenal-Bold.ttf'
+                text: "--Кількість логіків--"
+                font_size: '30sp'
+                color: 25, 160, 5, 1
+            Image:
+                size_hint: None, None
+                size: '94dp', '64dp'
+                source: 'logik.png'
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.8}
+            spacing: '100dp'
+            Label:
+                font_name: 'Arsenal-Bold.ttf'
+                text: "10 логіків"
+                font_size: '30sp'
+                color: 25, 160, 5, 1
+            Image:
+                size_hint: None, None
+                size: '94dp', '64dp'
+                source: 'logik.png'
